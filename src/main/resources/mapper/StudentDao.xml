@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhf.tkmapperstudy.dao.StudentDao">
+
+    <resultMap type="com.zhf.tkmapperstudy.entity.Student" id="StudentMap">
+        <result property="sno" column="sno" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="birthday" column="birthday" jdbcType="VARCHAR"/>
+        <result property="department" column="department" jdbcType="VARCHAR"/>
+        <result property="sex" column="sex" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="StudentMap">
+        select
+          sno, name, birthday, department, sex
+        from public.student
+        where sno = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="StudentMap">
+        select
+          sno, name, birthday, department, sex
+        from public.student
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="StudentMap">
+        select
+        sno, name, birthday, department, sex
+        from public.student
+        <where>
+            <if test="sno != null">
+                and sno = #{sno}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="birthday != null">
+                and birthday = #{birthday}
+            </if>
+            <if test="department != null and department != ''">
+                and department = #{department}
+            </if>
+            <if test="sex != null and sex != ''">
+                and sex = #{sex}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="sno" useGeneratedKeys="true">
+        insert into public.student(sno, name, birthday, department, sex)
+        values (#{sno}, #{name}, #{birthday}, #{department}, #{sex})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="sno" useGeneratedKeys="true">
+        insert into public.student(sno, name, birthday, department, sex)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.sno}, #{entity.name}, #{entity.birthday}, #{entity.department}, #{entity.sex})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="sno" useGeneratedKeys="true">
+        insert into public.student(sno, name, birthday, department, sex)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.sno}, #{entity.name}, #{entity.birthday}, #{entity.department}, #{entity.sex})
+        </foreach>
+        on duplicate key update
+        sno = values(sno) , name = values(name) , birthday = values(birthday) , department = values(department) , sex =
+        values(sex)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update public.student
+        <set>
+            <if test="sno != null">
+                sno = #{sno},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="department != null and department != ''">
+                department = #{department},
+            </if>
+            <if test="sex != null and sex != ''">
+                sex = #{sex},
+            </if>
+        </set>
+        where sno = #{sno}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from public.student where sno = #{sno}
+    </delete>
+
+</mapper>
+

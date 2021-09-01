@@ -1,0 +1,11 @@
+server:
+  port: 8102
+
+spring:
+  profiles:
+    active: dev
+  main:
+    allow-bean-definition-overriding: true  #当遇到同样名字的时候，是否允许覆盖注册
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*Mapper.xml
