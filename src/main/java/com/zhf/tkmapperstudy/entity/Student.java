@@ -1,7 +1,5 @@
 package com.zhf.tkmapperstudy.entity;
 
-import com.baomidou.mybatisplus.extension.activerecord.Model;
-
 /**
  * (Student)表实体类
  *
@@ -9,7 +7,7 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
  * @since 2021-08-30 13:14:31
  */
 @SuppressWarnings("serial")
-public class Student extends Model<Student> {
+public class Student {
 
     private Integer sno;
 
