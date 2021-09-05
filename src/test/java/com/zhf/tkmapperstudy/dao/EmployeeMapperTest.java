@@ -3,11 +3,15 @@ package com.zhf.tkmapperstudy.dao;
 import com.zhf.tkmapperstudy.TKMapperStudyApplication;
 import com.zhf.tkmapperstudy.entity.Employee;
 import com.zhf.tkmapperstudy.service.impl.EmployeeServiceImpl;
+import org.apache.ibatis.session.RowBounds;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import tk.mybatis.mapper.entity.Example;
+
+import java.util.List;
 
 /**
  * @author: 曾鸿发
@@ -28,7 +32,7 @@ public class EmployeeMapperTest {
     @Test
     public void testSelectOne(){
         // 1. 创建封装查询条件的实体类对象
-        Employee employeeCondition = new Employee(null, "bob", 5560.11, null);
+        Employee employeeCondition = new Employee(null, "bob", 5560.11, null, null);
         // 2. 执行查询
         Employee employeeQueryResult = employeeService.getOne(employeeCondition);
         // 3. 打印
@@ -69,5 +73,57 @@ public class EmployeeMapperTest {
         // 3. 获取employee对象的主键字段值
         Integer empId = employee.getEmpId();
         System.out.println("empId:" + empId);
+        System.out.println(Integer.MAX_VALUE);
+    }
+
+    @Test
+    public void testSelectByExample(){
+        //1. 创建Example对象
+        Example example = new Example(Employee.class);
+
+        // i. 设置排序信息
+        example.orderBy("empSalary").asc().orderBy("empAge").desc();
+
+        // ii.设置“去重”
+        example.setDistinct(true);
+
+        ///iii. 设置select字段
+        example.selectProperties("empName", "empSalary", "empAge");
+
+        //2. 通过Example对象创建 Criteria对象
+        Example.Criteria criteria01 = example.createCriteria();
+        Example.Criteria criteria02 = example.createCriteria();
+
+        //3. 在两个Criteria对象中分别设置查询条件
+        //property参数：实体类的属性名
+        // value参数：实体类的属性值
+        criteria01.andGreaterThan("empSalary", 3000)
+                .andLessThan("empAge", 25);
+        criteria02.andLessThan("empSalary", 5000)
+                .andGreaterThan("empAge", 30);
+
+        //4. 使用OR 关键字组装两个Criteria 对象
+        example.or(criteria02);
+
+        //5.执行查询
+        List<Employee> employeeList =employeeService.getEmpListByExample(example);
+
+        employeeList.forEach(System.out::println);
+    }
+
+    @Test
+    public void testSelectByRowBounds(){
+        int pageNo = 3;
+        int pageSize = 5;
+
+        int index = (pageNo - 1) * pageSize;
+
+        RowBounds rowBounds = new RowBounds(index, pageSize);
+
+        List<Employee> employeeList = employeeService.getEmpListByBounds(rowBounds);
+
+        for (Employee employee : employeeList) {
+            System.out.println(employee);
+        }
     }
 }
