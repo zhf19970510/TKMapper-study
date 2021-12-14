@@ -21,9 +21,9 @@ public class EmployeeServiceImpl {
     @Autowired
     private EmployeeMapper employeeMapper;
 
-    public void batchUpdateEmp(List<Employee> employeeList) {
-        employeeMapper.batchUpdate(employeeList);
-    }
+    // public void batchUpdateEmp(List<Employee> employeeList) {
+    //     employeeMapper.batchUpdate(employeeList);
+    // }
 
     public Employee getOne(Employee employeeCondition) {
 

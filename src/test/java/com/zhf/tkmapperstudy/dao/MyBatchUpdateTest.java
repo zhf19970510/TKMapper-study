@@ -31,6 +31,6 @@ public class MyBatchUpdateTest {
         employeeList.add(new Employee(9, "newName01", 111.11, 10, null));
         employeeList.add(new Employee(10, "newName02", 222.22, 20, null));
         employeeList.add(new Employee(11, "newName03", 333.33, 30, null));
-        employeeService.batchUpdateEmp(employeeList);
+        // employeeService.batchUpdateEmp(employeeList);
     }
 }
